@@ -1,0 +1,28 @@
+/* Reveal states are only applied once JS confirms it can animate (html.js) */
+.js [data-reveal]{opacity:0;transform:translateY(var(--reveal-y));transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease);transition-delay:calc(var(--i,0) * var(--stagger))}
+.js [data-reveal].in{opacity:1;transform:none}
+.js [data-mask]{clip-path:inset(0 0 100% 0);transition:clip-path 1.2s var(--ease-in-out)}
+.js [data-mask].in{clip-path:inset(0)}
+.js [data-mask] img{transform:scale(1.14);transition:transform 1.8s var(--ease)}
+.js [data-mask].in img{transform:none}
+.line-draw{animation:draw 2.8s var(--ease) .3s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes ping{0%{transform:scale(.7);opacity:.6}100%{transform:scale(1.7);opacity:0}}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.strip ul{animation:marquee 46s linear infinite}
+.strip:hover ul{animation-play-state:paused}
+.cursor-dot{position:fixed;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--accent);pointer-events:none;z-index:400;opacity:0;transition:width var(--dur-1),height var(--dur-1),margin var(--dur-1),opacity var(--dur-1);mix-blend-mode:normal}
+.cursor-dot.on{opacity:1}
+.cursor-dot.big{width:64px;height:64px;margin:-32px 0 0 -32px;opacity:.9;display:grid;place-items:center;font:700 11px var(--font-display);color:var(--ink);letter-spacing:.1em}
+@media (scroll-timeline:--x){}
+@supports (animation-timeline:scroll()){
+  .scroll-progress{position:fixed;left:0;top:0;height:3px;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);z-index:150;animation:prog linear both;animation-timeline:scroll(root)}
+  @keyframes prog{to{transform:scaleX(1)}}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .js [data-reveal],.js [data-mask]{opacity:1;transform:none;clip-path:none}
+  .draw{stroke-dashoffset:0}
+  .strip ul{width:auto;flex-wrap:wrap}
+  .cursor-dot{display:none}
+}
