@@ -18,7 +18,7 @@ window.LIUTE = window.LIUTE || {};
     v.addEventListener('canplay', () => { v.classList.add('ready'); v.play().catch(() => {}); }, { once: true });
     v.addEventListener('error', () => v.remove());
   } else if (v) v.remove();
-  ['initNavigation', 'initAnimations', 'initScrollEffects', 'initInteractions', 'initHero', 'initHome', 'initHomeFx', 'initGallery', 'initForms'].forEach(fn => {
+  ['initNavigation', 'initAnimations', 'initScrollEffects', 'initInteractions', 'initHero', 'initSliders', 'initHome', 'initHomeFx', 'initGallery', 'initForms'].forEach(fn => {
     try { L[fn] && L[fn](); } catch (e) { console.error('LIUTE', fn, e); }
   });
 })();
