@@ -274,3 +274,16 @@
 .h2x{font-size:clamp(30px,4.7vw,74px);font-weight:700;letter-spacing:-.03em}
 .ab-h{font-size:clamp(28px,3.5vw,52px)}
 .sl-count{white-space:nowrap;display:flex;gap:6px;align-items:center}
+/* ===== v5 layout: 50% media, about stretch, source labels ===== */
+.appr-grid{grid-template-columns:1fr 1fr;gap:clamp(28px,4.5vw,80px)}
+.appr-media{aspect-ratio:1/1.12;max-height:84svh}
+.work2{grid-template-columns:1fr 1fr;gap:clamp(28px,4.5vw,80px)}
+.w2-img{aspect-ratio:1/1.06;max-height:84svh}
+.ab{align-items:stretch}
+.ab .slider{aspect-ratio:auto;height:100%;min-height:600px;max-height:none}
+.lab .t-real{display:none}
+[data-real] .lab .t-ill{display:none}[data-real] .lab .t-real{display:inline}
+.lab i{font-style:normal}
+.sf-tag{position:absolute;left:14px;bottom:14px;z-index:2;background:rgba(8,16,34,.75);padding:6px 9px;font-size:10px;color:#9cc7ff}
+.sf2-i{min-height:min(86svh,760px)}
+@media (max-width:900px){.ab .slider{aspect-ratio:4/4.4;height:auto;min-height:0}.appr-media{aspect-ratio:4/3}.w2-img{aspect-ratio:4/3}}

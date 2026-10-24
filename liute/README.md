@@ -30,3 +30,6 @@ Replace files in `assets/images/...` keeping filenames. Hero video: add `<video>
 - Replace `https://www.example.com` in canonical/Open Graph tags and `sitemap.xml` with the real domain (find and replace).
 - Supply Privacy Policy and Terms text (placeholders).
 - Swap low-resolution profile photos for originals when available.
+
+## Premium homepage images
+See `IMAGE-GUIDE.md`: drop licensed JPGs into `assets/images/premium/` with the listed filenames; the homepage uses them automatically and falls back to the current images otherwise.
