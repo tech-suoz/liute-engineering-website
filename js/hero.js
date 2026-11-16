@@ -3,7 +3,7 @@ window.LIUTE.initHero = function () {
   const { qs, qsa, reduced, fine } = window.LIUTE;
   const hx = qs('#hero'); if (!hx) return;
   const data = JSON.parse(hx.dataset.slides), slides = qsa('.sl', hx), segs = qsa('.seg', hx);
-  const K = qs('#hxK'), H = qs('#hxH'), Pp = qs('#hxP'), N = qs('#hxN');
+  const K = qs('#hxK'), H = qs('#hxH'), Pp = qs('#hxP'), N = qs('#hxN'), C = qs('#hxC'), X = qs('#hxX');
   const CH = 'ABCDEFGHJKLMNOPRSTUVWXYZ0123456789';
   let scr = 0;
   const scramble = (el, text) => {
@@ -12,7 +12,25 @@ window.LIUTE.initHero = function () {
     const tick = () => { f++; let o = ''; for (let k = 0; k < text.length; k++) o += (text[k] === ' ' || k < (f / total) * text.length * 1.2) ? text[k] : CH[(Math.random() * CH.length) | 0]; el.textContent = o; if (f < total + 6) scr = requestAnimationFrame(tick); else el.textContent = text; };
     tick();
   };
-  const letters = (el, text) => { let k = 0; el.innerHTML = text.split(' ').map(w => `<span class="w">${[...w].map(c => `<span class="c" style="--k:${k++}">${c}</span>`).join('')}</span>`).join(' '); el.setAttribute('aria-label', text); };
+  const ic = n => `<i aria-hidden="true" class="fa-solid fa-${n}"></i>`;
+  const ARR = ' <span class="arr"><svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-linecap="square" stroke-width="2" viewBox="0 0 24 24" width="16"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span>';
+  // headline: words inside [[ ]] are highlighted with the accent colour
+  const letters = (el, text) => {
+    let k = 0, acc = false, words = [];
+    text.split(/(\[\[|\]\])/).forEach(part => { if (part === '[[') acc = true; else if (part === ']]') acc = false; else part.split(' ').filter(Boolean).forEach(w => words.push([w, acc])); });
+    el.innerHTML = words.map(([w, a]) => `<span class="w${a ? ' acc' : ''}">${[...w].map(c => `<span class="c" style="--k:${k++}">${c}</span>`).join('')}</span>`).join(' ');
+    el.setAttribute('aria-label', words.map(x => x[0]).join(' '));
+  };
+  // per-slide buttons, feature points and photo tiles / strip
+  const extras = d => {
+    const cta = d.c || [['Discuss your project', 'pages/project-enquiry.html'], ['Explore our capabilities', 'pages/capabilities.html']];
+    C.innerHTML = cta.map((x, n) => `<a class="btn${n ? ' ghost' : ''}" href="${x[1]}">${x[0]}${n ? '' : ARR}</a>`).join('');
+    let n = 0, h = '';
+    if (d.f) h += '<ul class="hx-feat">' + d.f.map(x => `<li style="--i:${n++}">${ic(x[0])}<span>${x[1]}</span></li>`).join('') + '</ul>';
+    if (d.t) h += '<ul class="hx-tiles">' + d.t.map(x => `<li style="--i:${n++}"><img alt="" decoding="async" src="assets/images/home/${x[0]}.jpg"/><span>${ic(x[1])}${x[2]}</span></li>`).join('') + '</ul>';
+    if (d.s) h += '<ul class="hx-strip">' + d.s.map(x => `<li style="--i:${n++}">${ic(x[0])}<span>${x[1]}</span></li>`).join('') + '</ul>';
+    X.innerHTML = h;
+  };
   let i = 0, timer = 0, busy = false;
   const go = (n, first) => {
     const nx = (n + data.length) % data.length; if (busy && !first) return;
@@ -22,10 +40,10 @@ window.LIUTE.initHero = function () {
       segs.forEach((s, k) => { s.classList.remove('on'); if (k === i) { void s.offsetWidth; s.classList.add('on'); } });
       if (N) N.textContent = '0' + (i + 1);
       scramble(K, d.k); letters(H, d.h); H.classList.remove('out');
-      Pp.textContent = d.p; Pp.classList.remove('swap');
+      Pp.textContent = d.p; Pp.classList.remove('swap'); extras(d); C.classList.remove('swap'); X.classList.remove('swap');
     };
     if (first || reduced) { apply(); return; }
-    busy = true; H.classList.add('out'); Pp.classList.add('swap');
+    busy = true; H.classList.add('out'); Pp.classList.add('swap'); C.classList.add('swap'); X.classList.add('swap');
     setTimeout(() => { apply(); busy = false; }, 520);
   };
   const stop = () => clearInterval(timer);
