@@ -48,4 +48,24 @@ window.LIUTE.initHomeFx = function () {
     a.addEventListener('pointermove', e => { const r = a.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; a.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg) translateZ(0)`; });
     a.addEventListener('pointerleave', () => (a.style.transform = ''));
   });
+  // Approach: two-stage tabs (all content stays visible without JavaScript)
+  const stage = qs('#ap-stage');
+  if (stage) {
+    const tabs = qsa('.ap-tab', stage), panels = qsa('.ap-panel', stage);
+    stage.classList.add('ap-js');
+    const show = (k, focus) => {
+      tabs.forEach((t, n) => { const on = n === k; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; if (on && focus) t.focus(); });
+      panels.forEach((p, n) => { p.hidden = n !== k; });
+    };
+    tabs.forEach((t, k) => {
+      t.addEventListener('click', () => show(k));
+      t.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); show((k + 1) % tabs.length, true); }
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show((k - 1 + tabs.length) % tabs.length, true); }
+        else if (e.key === 'Home') { e.preventDefault(); show(0, true); }
+        else if (e.key === 'End') { e.preventDefault(); show(tabs.length - 1, true); }
+      });
+    });
+    show(0);
+  }
 };
